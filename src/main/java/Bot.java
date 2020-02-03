@@ -3,7 +3,10 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.ApiContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMembersCount;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -44,6 +47,7 @@ public class Bot extends TelegramLongPollingCommandBot {
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
+
         try {
             sendApiMethod(sendMessage);
         } catch (TelegramApiException e) {
@@ -59,6 +63,15 @@ public class Bot extends TelegramLongPollingCommandBot {
             switch (message.getText()) {
                 case "/hi":
                     sendMsg(message, "hello");
+                    break;
+                case "/test":
+                    GetChatMembersCount getChatMembersCount = new GetChatMembersCount();
+                    getChatMembersCount.setChatId(message.getChatId());
+                    try {
+                        sendMsg(message, "В чате " + sendApiMethod(getChatMembersCount) + " юзеров");
+                    } catch (TelegramApiException e) {
+                        sendMsg(message, e.getMessage());
+                    }
                     break;
             }
         }
