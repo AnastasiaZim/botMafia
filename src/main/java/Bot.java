@@ -107,7 +107,8 @@ public class Bot extends TelegramLongPollingCommandBot {
                     sendMsg(message, "Если тут была игра, то, только что ее не стало");
                     break;
                 case "/rand":
-                    sendMsg(message.getChatId(), "rand: " + ((int) (Math.random() * (Long.parseLong(argument != null ? argument : "2")))));
+                    sendMsg(message.getChatId(), "rand: " + ((int) (Math.random() *
+                            (Long.parseLong(argument != null ? argument : "2")))));
                     break;
                 case "/kill":
                     kill(message.getChatId(), argument != null ? argument : "");
@@ -127,7 +128,8 @@ public class Bot extends TelegramLongPollingCommandBot {
             } else {
                 player.votes++;
                 game.votesCount++;
-                sendMsg(message, message.getFrom().getFirstName() + " полагает, что мафия " + player.getUser().getFirstName());
+                sendMsg(message, message.getFrom().getFirstName() + " полагает, что мафия "
+                        + player.getUser().getFirstName());
                 if (game.votesCount >= game.countPlayers()) {
                     sendMsg(message.getChatId(), "Все проголосовали!");
                     game.votesCount = 0;
@@ -136,7 +138,9 @@ public class Bot extends TelegramLongPollingCommandBot {
                         sendMsg(message.getChatId(), "Неоднозначные выводы, придется переголосовать");
                     } else {
                         game.setPlayerToPrison(votedPlayer);
-                        sendMsg(message.getChatId(), "Коллективный разум посадил в тюрьму " + votedPlayer.getUser().getFirstName() + " (" + votedPlayer.getRole() + ")");
+                        sendMsg(message.getChatId(), "Коллективный разум посадил в тюрьму "
+                                + votedPlayer.getUser().getFirstName() + " (" + votedPlayer.getRole() + ")");
+                        nextStep(message.getChatId());
                     }
                 }
             }
@@ -160,9 +164,10 @@ public class Bot extends TelegramLongPollingCommandBot {
         if (deadPlayer != null) {
             sendMsg(chatId, "Ты коварно убил " + name);
             game.setCitizenStep();
-            sendMsg(gameChatId, "Город просыпается, но не весь... \nЭтой ночью убили " + name + " (" + deadPlayer.getRole() + ")");
-            sendMsg(gameChatId, "Время обсудить и решить кто мафия, когда определитесь с выбором, голосуйте здесь при помощи команды \n<code>/vote Имя</code>");
-            nextStep(gameChatId);
+            sendMsg(gameChatId, "Город просыпается, но не весь... \nЭтой ночью убили " + name
+                    + " (" + deadPlayer.getRole() + ")");
+            sendMsg(gameChatId, "Время обсудить и решить кто мафия, когда определитесь с выбором," +
+                    " голосуйте здесь при помощи команды \n<code>/vote Имя</code>");
         } else {
             sendMsg(chatId, "Что-то пошло не так, либо неправильно ввел имя, либо еще не время убивать");
         }
@@ -177,13 +182,16 @@ public class Bot extends TelegramLongPollingCommandBot {
         game.setMafiaStep();
         Player mafia = game.getMafia();
         if (mafia == null) {
-            sendMsg(chatId, "Ой, не просыпается, горожане победили! Чтобы сыграть еще раз, воспользуйтесь командой\n /newGame");
+            sendMsg(chatId, "Ой, не просыпается, горожане победили! Чтобы сыграть еще раз," +
+                    " воспользуйтесь командой\n /newGame");
             games.remove(findGameById(chatId));
         } else if (game.countPlayers() == 1) {
-            sendMsg(chatId, "А убивать-то больше некого, мафия победила! Чтобы сыграть еще раз, воспользуйтесь командой\n /newGame");
+            sendMsg(chatId, "А убивать-то больше некого, мафия победила! Чтобы сыграть еще раз," +
+                    " воспользуйтесь командой\n /newGame");
             games.remove(findGameById(chatId));
         } else {
-            sendMsg(mafia.getChatId(), "Время творить зло! Выбери кого убьешь этой ночью при помощи команды <code>/kill " + chatId + "</code> Имя");
+            sendMsg(mafia.getChatId(), "Время творить зло! Выбери кого убьешь этой ночью " +
+                    "при помощи команды <code>/kill " + chatId + "</code> Имя");
         }
     }
 
@@ -226,7 +234,8 @@ public class Bot extends TelegramLongPollingCommandBot {
         }
         if (game.addPlayer(message.getFrom(), message.getChatId())) {
             sendMsg(message, "Ты успешно присоединился к игре, возвращайся в чат игры");
-            sendMsg(game.getChat().getId(), message.getFrom().getFirstName() + " присоединилась/ся к игре! Теперь в ней " + game.countPlayers() + " игроков!");
+            sendMsg(game.getChat().getId(), message.getFrom().getFirstName() +
+                    " присоединилась/ся к игре! Теперь в ней " + game.countPlayers() + " игроков!");
         } else {
             sendMsg(message, "Не удалось присоединиться к игре");
         }
@@ -253,7 +262,10 @@ public class Bot extends TelegramLongPollingCommandBot {
             sendMsg(message, "В этом чате уже есть игра");
         } else {
             games.add(newGame);
-            sendMsg(message, "Новая игра успешно создана, для того чтобы присоединиться, нужно открыть личный чат с ботом и отправить ему команду\n <code>/enterGame " + newGame.getChat().getId() + "</code>\n Чтобы закрыть набор игроков и приступить к игре, воспользуйтесь командой \n/closeInvite ");
+            sendMsg(message, "Новая игра успешно создана, для того чтобы присоединиться," +
+                    " нужно открыть личный чат с ботом и отправить ему команду\n <code>/enterGame "
+                    + newGame.getChat().getId() + "</code>\n Чтобы закрыть набор игроков и приступить" +
+                    " к игре, воспользуйтесь командой \n/closeInvite ");
         }
     }
 
